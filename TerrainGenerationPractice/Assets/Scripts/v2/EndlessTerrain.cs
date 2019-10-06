@@ -93,10 +93,12 @@ public class EndlessTerrain : MonoBehaviour
 
         MeshRenderer meshRenderer;
         MeshFilter meshFilter;
+        MeshCollider meshCollider;
 
         LevelOfDetailInfo[] detailLevels;
         int prevLevelOfDetailIndex = -1;    // dont update lod if it is the same as last time
         LevelOfDetailMesh[] levelOfDetailMeshes;
+        LevelOfDetailMesh collisionLODMesh;
 
         MapData mapData;
         bool mapDataRecieved = false;
@@ -114,6 +116,7 @@ public class EndlessTerrain : MonoBehaviour
             meshRenderer = meshObject.AddComponent<MeshRenderer>();
             meshRenderer.material = material;
             meshFilter = meshObject.AddComponent<MeshFilter>(); // when adding, returns object that was added
+            meshCollider = meshObject.AddComponent<MeshCollider>();
 
             meshObject.transform.position = positionV3 * scale;
             //meshObject.transform.localScale = Vector3.one * size / 10f; // default scale is 10 units (for planes)
@@ -125,6 +128,7 @@ public class EndlessTerrain : MonoBehaviour
             levelOfDetailMeshes = new LevelOfDetailMesh[detailLevels.Length];
             for (int i = 0; i < detailLevels.Length; i++) {
                 levelOfDetailMeshes[i] = new LevelOfDetailMesh(detailLevels[i].levelOfDetail, UpdateTerrainChunk);
+                if (detailLevels[i].useForCollider) collisionLODMesh = levelOfDetailMeshes[i];
             }
 
             mapGenerator.RequestMapData(position, OnMapDataRecieved);
@@ -182,11 +186,18 @@ public class EndlessTerrain : MonoBehaviour
                         {
                             prevLevelOfDetailIndex = levelOfDetailIndex;
                             meshFilter.mesh = levelOfDetailMesh.mesh;
+                            //meshCollider.sharedMesh = levelOfDetailMesh.mesh; // creates too high of complexity mesh
                         }
                         else if (!levelOfDetailMesh.hasRequestedMesh)
                         {
                             levelOfDetailMesh.RequestMesh(mapData);
                         }
+                    }
+
+                    // only if the player is close enough, generate the collider (slighty lower then need be as well)
+                    if (levelOfDetailIndex == 0) {
+                        if (collisionLODMesh.hasMesh) meshCollider.sharedMesh = collisionLODMesh.mesh;
+                        else if (!collisionLODMesh.hasRequestedMesh) collisionLODMesh.RequestMesh(mapData);
                     }
 
                     terrainChunksVisibleLastUpdate.Add(this);   // to fix terrain chunks getting displayed but not added to list
@@ -241,5 +252,6 @@ public class EndlessTerrain : MonoBehaviour
     {
         public int levelOfDetail;
         public float visibleDstThreshold;
+        public bool useForCollider;
     }
 }
