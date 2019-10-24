@@ -65,6 +65,7 @@
     <Compile Include="Assets\Scripts\v1\Mesh_Generator.cs" />
     <Compile Include="Assets\Scripts\v2\Data\NoiseData.cs" />
     <Compile Include="Assets\Scripts\v2\Data\TerrainData.cs" />
+    <Compile Include="Assets\Scripts\v2\Data\TextureData.cs" />
     <Compile Include="Assets\Scripts\v2\Data\UpdatableData.cs" />
     <Compile Include="Assets\Scripts\v2\EndlessTerrain.cs" />
     <Compile Include="Assets\Scripts\v2\FalloffGenerator.cs" />
