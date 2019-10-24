@@ -4,8 +4,6 @@ using UnityEngine;
 
 public class EndlessTerrain : MonoBehaviour
 {
-    const float scale = 1f;
-
     const float viewerMoveThresholdForChunkUpdate = 25f;
     const float sqrMoveThresholdForChunkUpdate = viewerMoveThresholdForChunkUpdate * viewerMoveThresholdForChunkUpdate;
 
@@ -38,7 +36,7 @@ public class EndlessTerrain : MonoBehaviour
 
     private void Update()
     {
-        viewerPosition = new Vector2(viewer.position.x, viewer.position.z) / scale;
+        viewerPosition = new Vector2(viewer.position.x, viewer.position.z) / mapGenerator.terrainData.uniformScale;
 
         // sqrMagnitude = the square distance between the two
         if ( (viewerPositionOld - viewerPosition).sqrMagnitude > sqrMoveThresholdForChunkUpdate )
@@ -118,10 +116,10 @@ public class EndlessTerrain : MonoBehaviour
             meshFilter = meshObject.AddComponent<MeshFilter>(); // when adding, returns object that was added
             meshCollider = meshObject.AddComponent<MeshCollider>();
 
-            meshObject.transform.position = positionV3 * scale;
+            meshObject.transform.position = positionV3 * mapGenerator.terrainData.uniformScale;
             //meshObject.transform.localScale = Vector3.one * size / 10f; // default scale is 10 units (for planes)
             meshObject.transform.parent = parent;
-            meshObject.transform.localScale = Vector3.one * scale;
+            meshObject.transform.localScale = Vector3.one * mapGenerator.terrainData.uniformScale;
             SetVisible(false);
 
             // make a mesh for each level of detail
