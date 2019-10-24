@@ -11,7 +11,10 @@ public class MapGenerator : MonoBehaviour
 
     public Noise.NormalizeMode normalizeMode;
 
-    public const int mapChunkSize = 239;    // 241 = 239 + 2 for border  (which is nicely dividisble by levelOfDetail numbers)
+    //public const int mapChunkSize = 95;    // 241 = 239 + 2 for border  (which is nicely dividisble by levelOfDetail numbers)
+                                           // to handle flat shading (which creates a bunch of extra vertices) the lowest number that is divisible by LOD (except 10) == 95 + 1
+    public bool useFlatShading;
+
     [Range(0,6)]
     public int editorPreviewLevelOfDetail;   // ((width - 1 )/ i) + 1  1,2,4,6,8,12
     public float noiseScale;
@@ -32,6 +35,7 @@ public class MapGenerator : MonoBehaviour
     public bool autoUpdate;
 
     public TerrainTypes[] regions;
+    static MapGenerator instance;
 
     float[,] falloffMap;
 
@@ -41,6 +45,15 @@ public class MapGenerator : MonoBehaviour
     private void Awake()
     {
         falloffMap = FalloffGenerator.GenerateFallofMap(mapChunkSize);
+    }
+
+    public static int mapChunkSize
+    {
+        get {
+            if (instance == null) instance = FindObjectOfType<MapGenerator>();
+            if (instance.useFlatShading) return 95;
+            else return 239;
+        }
     }
 
     public void DrawMapInEditor()
@@ -53,7 +66,7 @@ public class MapGenerator : MonoBehaviour
         else if (drawMode == DrawMode.ColorMap)
             display.DrawTexture(TextureGenerator.TextureFromColorMap(mapData.colorMap, mapChunkSize, mapChunkSize));
         else if (drawMode == DrawMode.Mesh)
-            display.DrawMesh(MeshGenerator.GenerateTerrainMesh(mapData.heightMap, meshHeightMultiplier, meshHeightCurve, editorPreviewLevelOfDetail),
+            display.DrawMesh(MeshGenerator.GenerateTerrainMesh(mapData.heightMap, meshHeightMultiplier, meshHeightCurve, editorPreviewLevelOfDetail, useFlatShading),
                              TextureGenerator.TextureFromColorMap(mapData.colorMap, mapChunkSize, mapChunkSize));
         else if (drawMode == DrawMode.FalloffMap)
             display.DrawTexture(TextureGenerator.TextureFromHeightMap(FalloffGenerator.GenerateFallofMap(mapChunkSize)));
@@ -87,7 +100,7 @@ public class MapGenerator : MonoBehaviour
 
     void MeshDataThread(MapData mapData, int levelOfDetail, Action<MeshData> callback)
     {
-        MeshData meshData = MeshGenerator.GenerateTerrainMesh(mapData.heightMap, meshHeightMultiplier, meshHeightCurve, levelOfDetail);
+        MeshData meshData = MeshGenerator.GenerateTerrainMesh(mapData.heightMap, meshHeightMultiplier, meshHeightCurve, levelOfDetail, useFlatShading);
         lock (meshDataThreadInfoQueue)
         {
             meshDataThreadInfoQueue.Enqueue(new MapThreadInfo<MeshData>(callback, meshData));

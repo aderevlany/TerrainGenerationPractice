@@ -9,7 +9,7 @@ using UnityEngine;
 public static class MeshGenerator
 {
     public static MeshData GenerateTerrainMesh(float[,] heightMap, float heightMultiplier, 
-                                               AnimationCurve _heightCurve, int levelOfDetail) {
+                                               AnimationCurve _heightCurve, int levelOfDetail, bool useFlatShading) {
         // create a new animation curve for each mesh so that weird spikes dont be spiky (fixes an animation curve 'optamization')
         AnimationCurve heightCurve = new AnimationCurve(_heightCurve.keys);
 
@@ -24,7 +24,7 @@ public static class MeshGenerator
 
         int verticesPerLine = (meshSize - 1) / meshSimplificationIncrement + 1;
 
-        MeshData meshData = new MeshData(verticesPerLine);
+        MeshData meshData = new MeshData(verticesPerLine, useFlatShading);
         // int vertexIndex = 0;
 
         int[,] vertexIndicesMap = new int[borderedSize, borderedSize];
@@ -76,7 +76,7 @@ public static class MeshGenerator
             }
         }
 
-        meshData.BakeNormals();
+        meshData.ProcessMesh();
 
         return meshData;    // return meshData, not mesh for treading later
     }
@@ -94,7 +94,11 @@ public class MeshData {
     int triangleIndex = 0;
     int borderTriangleIndex = 0;
 
-    public MeshData(int verticesPerLine) {
+    bool useFlatShading;
+
+    public MeshData(int verticesPerLine, bool useFlatShading) {
+        this.useFlatShading = useFlatShading;
+
         vertices = new Vector3[verticesPerLine * verticesPerLine];
         uvs = new Vector2[verticesPerLine * verticesPerLine];
         triangles = new int[(verticesPerLine - 1) * (verticesPerLine - 1) * 6];
@@ -184,8 +188,34 @@ public class MeshData {
         return Vector3.Cross(sideAB, sideAC).normalized;
     }
 
-    public void BakeNormals() {
+    public void ProcessMesh()
+    {
+        if (useFlatShading)
+        {
+            FlatShading();
+        } else
+        {
+            BakeNormals();  // gets normals/shading to be consistent, which we do not need in flat shading
+        }
+    }
+
+    private void BakeNormals() {
         bakedNormals = CalculateNormals();
+    }
+
+    private void FlatShading()
+    {
+        Vector3[] flatShadedVertices = new Vector3[triangles.Length];
+        Vector2[] flatShadedUVs = new Vector2[triangles.Length];
+
+        for (int i = 0; i < triangles.Length; i++)
+        {
+            flatShadedVertices[i] = vertices[triangles[i]];
+            flatShadedUVs[i] = uvs[triangles[i]];
+            triangles[i] = i; // make each vertice seperate so that lighting looks flat and does not get influenced by neighboring triangle
+        }
+        vertices = flatShadedVertices;
+        uvs = flatShadedUVs;
     }
 
     public Mesh CreateMesh() {
@@ -195,7 +225,13 @@ public class MeshData {
         mesh.uv = uvs;
         //mesh.RecalculateNormals();
         //mesh.normals = CalculateNormals();
-        mesh.normals = bakedNormals;
+        if (useFlatShading) {
+            mesh.RecalculateNormals();
+        }
+        else {
+            mesh.normals = bakedNormals;
+        }
+        
         return mesh;
     }
 }
