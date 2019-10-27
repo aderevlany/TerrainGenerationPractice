@@ -16,7 +16,7 @@
 		#pragma target 3.0
 
 		const static int maxColorCount = 8;
-	const static float epsilon = 1E-4;	// to deal with the possibility of dividing by 0
+		const static float epsilon = 1E-4;	// to deal with the possibility of dividing by 0
 
 		int baseColorCount;	// arrays will always be maxColorCount size, but may not have that many items
 		float3 baseColors[maxColorCount];	// need to initialize the arrays

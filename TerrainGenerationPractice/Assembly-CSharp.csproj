@@ -67,6 +67,7 @@
     <Compile Include="Assets\Scripts\v2\Data\NoiseData.cs" />
     <Compile Include="Assets\Scripts\v2\Data\TerrainData.cs" />
     <Compile Include="Assets\Scripts\v2\Data\TextureData.cs" />
+    <Compile Include="Assets\Scripts\v2\Data\TexturedTextureData.cs" />
     <Compile Include="Assets\Scripts\v2\Data\UpdatableData.cs" />
     <Compile Include="Assets\Scripts\v2\EndlessTerrain.cs" />
     <Compile Include="Assets\Scripts\v2\FalloffGenerator.cs" />
@@ -76,6 +77,7 @@
     <Compile Include="Assets\Scripts\v2\MeshGenerator.cs" />
     <Compile Include="Assets\Scripts\v2\Noise.cs" />
     <Compile Include="Assets\Scripts\v2\TextureGenerator.cs" />
+    <None Include="Assets\Scripts\v2\TexturedTerrain.shader" />
     <None Include="Assets\Scripts\v2\Terrain.shader" />
     <Reference Include="Unity.Timeline.Editor">
       <HintPath>C:/Users/impar/Documents/TerrainGeneration/TerrainGenerationPractice/TerrainGenerationPractice/Library/ScriptAssemblies/Unity.Timeline.Editor.dll</HintPath>

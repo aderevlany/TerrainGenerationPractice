@@ -14,7 +14,8 @@ public class MapGenerator : MonoBehaviour
 
     public TerrainData terrainData;
     public NoiseData noiseData;     // cleans up the code 👌
-    public TextureData textureData;
+    //public TextureData textureData;
+    public TexturedTextureData textureData;
 
     public Material terrainMaterial;
 
