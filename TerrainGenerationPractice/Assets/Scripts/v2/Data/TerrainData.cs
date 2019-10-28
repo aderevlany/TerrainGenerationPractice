@@ -29,10 +29,12 @@ public class TerrainData : UpdatableData
         }
     }
 
+#if UNITY_EDITOR
     protected override void OnValidate()
     {
         if (meshHeightMultiplier < 1) meshHeightMultiplier = 1;
 
         base.OnValidate();  // still need base class OnValidate funtionality to autoUpdate
     }
+#endif
 }

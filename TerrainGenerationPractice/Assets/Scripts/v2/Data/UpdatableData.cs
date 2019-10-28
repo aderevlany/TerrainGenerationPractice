@@ -8,6 +8,7 @@ public class UpdatableData : ScriptableObject
     public event System.Action OnValuesUpdated;
     public bool autoUpdate;
 
+#if UNITY_EDITOR
     protected virtual void OnValidate()
     {
         if (autoUpdate) UnityEditor.EditorApplication.update += NotifyOfUpdatedValues;  // to deal with not updating after changes
@@ -18,4 +19,6 @@ public class UpdatableData : ScriptableObject
         UnityEditor.EditorApplication.update -= NotifyOfUpdatedValues;  // unsubscribe as to not constantly update
         if (OnValuesUpdated != null) OnValuesUpdated();
     }
+
+#endif
 }
