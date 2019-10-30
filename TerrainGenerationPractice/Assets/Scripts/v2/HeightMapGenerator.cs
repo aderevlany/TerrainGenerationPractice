@@ -4,9 +4,10 @@ using UnityEngine;
 
 public static class HeightMapGenerator
 {
-    public static HeightMap GenerateHeightMap(int width, int height, HeightMapSettings settings, Vector2 sampleCenter)
+    public static HeightMap GenerateHeightMap(int width, int height, HeightMapSettings settings, MeshSettings meshSettings, Vector2 sampleCenter)
     {
         float[,] values = Noise.GenerateNoiseMap(width, height, settings.noiseSettings, sampleCenter);
+        float[,] falloffMap = FalloffGenerator.GenerateFallofMap(meshSettings.numVertsPerLine);
 
         // create a new animation curve for each mesh so that weird spikes dont be spiky (fixes an animation curve 'optamization')
         AnimationCurve heightCurve_threadsafe = new AnimationCurve(settings.heightCurve.keys);
@@ -16,6 +17,9 @@ public static class HeightMapGenerator
 
         for (int i = 0; i < width; i++) {
             for (int j = 0; j < height; j++) {
+                if (settings.useFalloff) {
+                    values[i, j] = Mathf.Clamp01(values[i, j] - falloffMap[i, j]);
+                }
                 values[i, j] *= heightCurve_threadsafe.Evaluate(values[i, j]) * settings.heightMultiplier;
 
                 if (values[i, j] > maxValue) maxValue = values[i, j];

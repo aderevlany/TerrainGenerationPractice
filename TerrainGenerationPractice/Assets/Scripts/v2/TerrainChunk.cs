@@ -76,7 +76,7 @@ public class TerrainChunk
     public void Load()
     {
         // () creates a new lambda with no parameters that returns what is on the right of the =>
-        ThreadedDataRequester.RequestData(() => HeightMapGenerator.GenerateHeightMap(meshSettings.numVertsPerLine, meshSettings.numVertsPerLine, heightMapSettings, sampleCenter), OnHeightMapReceived);
+        ThreadedDataRequester.RequestData(() => HeightMapGenerator.GenerateHeightMap(meshSettings.numVertsPerLine, meshSettings.numVertsPerLine, heightMapSettings, meshSettings, sampleCenter), OnHeightMapReceived);
     }
 
 
