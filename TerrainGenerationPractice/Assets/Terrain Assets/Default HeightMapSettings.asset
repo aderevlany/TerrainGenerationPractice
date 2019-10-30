@@ -14,10 +14,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   autoUpdate: 1
   noiseSettings:
-    normalizeMode: 0
+    normalizeMode: 1
     scale: 50
     octaves: 6
-    persistance: 0.554
+    persistance: 0.43
     lacunarity: 2
     seed: 0
     offset: {x: 0, y: 0}
@@ -36,17 +36,26 @@ MonoBehaviour:
       inWeight: 0
       outWeight: 0
     - serializedVersion: 3
-      time: 0.34912184
-      value: 0.23497504
-      inSlope: 0.20043905
-      outSlope: 0.20043905
+      time: 0.15922394
+      value: 0.0036573466
+      inSlope: 0.029976817
+      outSlope: 0.029976817
       tangentMode: 0
       weightedMode: 0
       inWeight: 0.33333334
-      outWeight: 0.15288287
+      outWeight: 0.24782872
     - serializedVersion: 3
-      time: 0.7326277
-      value: 0.68348074
+      time: 0.36541823
+      value: 0.38255805
+      inSlope: 0.99062324
+      outSlope: 0.99062324
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.143687
+    - serializedVersion: 3
+      time: 0.62807447
+      value: 0.69666433
       inSlope: 2.6550007
       outSlope: 2.6550007
       tangentMode: 0
@@ -54,8 +63,8 @@ MonoBehaviour:
       inWeight: 0.0835763
       outWeight: 0.11786851
     - serializedVersion: 3
-      time: 1.0101526
-      value: 1.1173724
+      time: 1.0006311
+      value: 1.1516322
       inSlope: 0.7374281
       outSlope: 0.7374281
       tangentMode: 0
